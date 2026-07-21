@@ -54,9 +54,14 @@ Put photo files in a `photos/` folder next to `index.html` (square images look b
   accent: "#2e6edf",                   // small dot + panel accent color
   members: [ { name: "Pradeep", role: "PM" }, { name: "Vaibhav" } ],
   techLeads: ["Riya"],                 // can be []
-  stakeholders: [ { name: "Nikki", level: "L1" } ]  // level optional
+  stakeholders: [ { name: "Nikki", level: "L1" } ]
 }
 ```
+
+Stakeholder `level` is never displayed — it only drives layout: when a stream
+has both L1 and L2 entries, the L1 names render as a top row with a connector
+line down to the L2 row (senior tier structure), and the stream card widens
+to fit. Streams without levels render stakeholders as a simple list.
 
 ## Sharing
 
@@ -69,12 +74,11 @@ on a URL, drop the file onto any static host.
 - [ ] Profile photos (square headshots → `photos/`)
 - [ ] LinkedIn URLs
 - [ ] Real titles and one-line bios
-- [ ] Confirm L1/L2 stakeholder definitions and Ops — Quick Wins stakeholder coverage
 - [ ] Tech Leads for Ops — Servstream, ACS, Data Engineering, CRE
 
 ## Notes on the source data
 
 - Built from the stream staffing sheet shared on 2026-07-21.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
-- The L1/L2 stakeholder list (Nikki/Ananya/Kaustubh, Matt/Rajeev) is assigned to
-  Finance — Quickwins only; move entries in `STREAMS` if it should span more.
+- The tiered stakeholder group (Nikki/Ananya/Kaustubh over Matt/Rajeev) applies
+  to both Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
