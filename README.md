@@ -59,9 +59,10 @@ Put photo files in a `photos/` folder next to `index.html` (square images look b
 ```
 
 Stakeholder `level` is never displayed — it only drives layout: when a stream
-has both L1 and L2 entries, the L1 names render as a top row with a connector
-line down to the L2 row (senior tier structure), and the stream card widens
-to fit. Streams without levels render stakeholders as a simple list.
+has both L1 and L2 entries, the L1 names render as a top row joined to the L2
+row by a branching org-chart connector (a stub touches every box above and
+below), and the stream card widens to fit. Streams without levels render all
+stakeholders side by side in a single row — same level, no implied hierarchy.
 
 ## Sharing
 
