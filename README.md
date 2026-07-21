@@ -37,6 +37,9 @@ step, no server.
   2+ characters). Press **Enter** to cycle through all matches — handy for
   people who appear in several streams.
 - **Drag** empty canvas space to pan; Esc closes the panel.
+- **Mobile friendly:** on phones the header stacks (search gets its own row,
+  legend hides), the profile panel opens full-screen, and the canvas pans
+  with native touch scrolling in both directions; pinch-zoom works too.
 - The Turing logo (header) and Apollo Global Management logo (root node) are
   embedded as base64 data URIs from `../BFSI Web App/turing-logo.jpg` and
   `../BFSI Web App/Apollo-logo.png` — the file stays fully self-contained.
@@ -99,9 +102,9 @@ on a URL, drop the file onto any static host.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
 - The stakeholder group (Nikki, Ananya, Kaustubh, Matt, Rajeev) applies to both
   Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
-- Apollo hierarchy comes from the client reporting table (2026-07-21). Rajeev
-  (Quickwins stakeholder) is the same person as the table's "Rajeev Kollara",
-  displayed as just "Rajeev" per Gaurav. Full names adopted for Juan Surgeon,
-  Abdul Goffar, Swapnil Daptardar; "Niki"/"Anany" in the table are Nikki/Ananya.
-  Stephen Olano's reporting line was not in the table — he shows without a
-  chain until provided.
+- Apollo hierarchy comes from the client reporting table (2026-07-21).
+  **Rajeev Kollara is Apollo Leadership** (not a stream stakeholder): he
+  appears in the Quickwins chains above Kaustubh and reports to John Hack.
+  Full names adopted for Juan Surgeon, Abdul Goffar, Swapnil Daptardar;
+  "Niki"/"Anany" in the table are Nikki/Ananya. Stephen Olano's reporting
+  line was not in the table — he shows without a chain until provided.
