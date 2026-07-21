@@ -10,11 +10,13 @@ step, no server.
 ## How to use
 
 - **Open it:** double-click `index.html`. All streams start expanded.
-- **Apollo internal hierarchy** sits between the root card and the stream row:
-  a top-down tree of the client organization (Virender Bedi, John Hack,
-  Paulomi Shah, Martin Kelly, John Cortese and their orgs, down to the
-  stream stakeholders). The **"Apollo hierarchy"** header button toggles a
-  view showing only this tree; clicking again returns to the full org.
+- **Apollo hierarchy is intertwined with each workstream:** inside a stream's
+  Apollo zone, every stakeholder's reporting chain is drawn above them as a
+  connected tree (e.g., CRE shows John Cortese → Jason D'Silva → Atul Singh →
+  Nicholas Pollari). Managers who are only reporting context (not stream
+  stakeholders) appear as dashed grey cards. The **"Apollo hierarchy"** header
+  button switches to a standalone tree of the full client organization;
+  clicking again returns to the streams.
 - Clicking anyone in the hierarchy opens their profile panel, which shows
   their **Reporting Line** (clickable chain up to the top) and **Direct
   Reports**, alongside any streams they're attached to.
@@ -66,16 +68,14 @@ Put photo files in a `photos/` folder next to `index.html` (square images look b
 }
 ```
 
-Stakeholder `level` is never displayed — it only drives layout: when a stream
-has both L1 and L2 entries, the L1 names render as a top row joined to the L2
-row by a branching org-chart connector (a stub touches every box above and
-below), and the stream card widens to fit. Streams without levels render all
-stakeholders side by side in a single row — same level, no implied hierarchy.
+Stakeholder `level` (L1/L2) is legacy and no longer affects rendering — the
+in-stream hierarchy now comes entirely from `APOLLO_REPORTING`.
 
 **3. `APOLLO_REPORTING`** — the client org: `person -> direct manager`
-(`null` = top of the visible hierarchy). The hierarchy tree above the streams
-and the "Reporting Line" / "Direct Reports" panel sections all derive from it.
-Add a new leader by adding their PEOPLE entry plus one line here.
+(`null` = top of the visible hierarchy). Drives the reporting tree inside each
+stream's Apollo zone, the standalone "Apollo hierarchy" toggle view, and the
+"Reporting Line" / "Direct Reports" panel sections. Add a new leader by adding
+their PEOPLE entry plus one line here; stream cards widen automatically.
 
 ## Sharing
 
@@ -94,10 +94,11 @@ on a URL, drop the file onto any static host.
 
 - Built from the stream staffing sheet shared on 2026-07-21.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
-- The tiered stakeholder group (Nikki/Ananya/Kaustubh over Matt/Rajeev Kollara)
-  applies to both Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
+- The stakeholder group (Nikki, Ananya, Kaustubh, Matt, Rajeev) applies to both
+  Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
 - Apollo hierarchy comes from the client reporting table (2026-07-21). Rajeev
-  (Quickwins stakeholder) = Rajeev Kollara, per Gaurav. Full names adopted from
-  the table (Juan Surgeon, Abdul Goffar, Swapnil Daptardar); "Niki"/"Anany" in
-  the table are Nikki/Ananya. Stephen Olano's reporting line was not in the
-  table — he shows at the top level until provided.
+  (Quickwins stakeholder) is the same person as the table's "Rajeev Kollara",
+  displayed as just "Rajeev" per Gaurav. Full names adopted for Juan Surgeon,
+  Abdul Goffar, Swapnil Daptardar; "Niki"/"Anany" in the table are Nikki/Ananya.
+  Stephen Olano's reporting line was not in the table — he shows without a
+  chain until provided.

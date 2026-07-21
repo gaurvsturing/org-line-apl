@@ -155,7 +155,7 @@
 
   /* ============ stream card ============ */
   .stream-card{
-    width:248px;
+    width:auto;min-width:248px;
     background:#fff;
     border:1px solid #eeeeee;
     border-radius:var(--radius-md);
@@ -216,25 +216,6 @@
   }
   .client-zone .person{background:#fff}
 
-  /* stakeholder rows: everyone in a row is at the same level */
-  .stream-card.wide{width:324px}
-  .tier-row{display:flex;gap:7px;margin-bottom:7px}
-  .tier-row.has-connect{margin-bottom:0}
-  .tier-row .person{
-    flex:1;min-width:0;flex-direction:column;text-align:center;
-    gap:5px;padding:9px 6px;margin-bottom:0;
-  }
-  .tier-row .p-text{width:100%}
-  .tier-row .p-name{font-size:11.5px}
-  .tier-row .p-title{font-size:10px}
-
-  /* branching connector between tiers: a stub touches every box above and below */
-  .tier-connect{position:relative;height:24px}
-  .tier-connect i{position:absolute;background:var(--gray-85)}
-  .tier-connect .tc-bar{top:50%;height:2px;margin-top:-1px}
-  .tier-connect .tc-up{top:0;bottom:50%;width:2px;transform:translateX(-50%)}
-  .tier-connect .tc-down{top:50%;bottom:0;width:2px;transform:translateX(-50%)}
-
   /* ============ Apollo internal hierarchy tree ============ */
   .otree ul{
     display:flex;justify-content:center;align-items:flex-start;
@@ -265,8 +246,26 @@
   .hnode .p-text{width:100%}
   .hnode .p-name{font-size:11.5px;white-space:normal;line-height:1.25}
   .hnode .p-title{font-size:10px}
+  /* manager shown only as reporting context (not a stream stakeholder) */
+  .hnode.ctx{border-style:dashed;box-shadow:none}
+  .hnode.ctx .p-name{color:var(--gray-30)}
+  .hnode.ctx .avatar{background:var(--gray-85);color:var(--gray-30)}
 
-  /* toggle: Apollo hierarchy only */
+  /* compact reporting forest inside a stream's client zone */
+  .otree.mini{display:flex;justify-content:center}
+  .otree.mini ul{padding-top:18px}
+  .otree.mini ul::before{height:18px}
+  .otree.mini li{padding:18px 3px 0}
+  .otree.mini li::before,.otree.mini li::after{height:18px}
+  .otree.mini > ul{padding-top:0}
+  .otree.mini > ul::before{display:none}
+  .otree.mini > ul > li{padding-top:0}
+  .otree.mini > ul > li::before,.otree.mini > ul > li::after{display:none}
+  .otree.mini .hnode{width:106px;padding:8px 4px;margin-bottom:7px}
+
+  /* views: streams with in-card chains by default; toggle = client tree only */
+  #apolloTree{display:none}
+  body.apollo-only #apolloTree{display:block}
   body.apollo-only .trunk,body.apollo-only .streams-row{display:none}
   .empty-note{font-size:12px;color:var(--gray-60);font-style:italic;padding:2px 4px 8px}
 
@@ -454,7 +453,7 @@ const PEOPLE = {
   "Ananya":             { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Kaustubh":           { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Matt":               { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Rajeev Kollara":     { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Rajeev":             { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Natasha":            { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Juan Surgeon":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Abdul Goffar":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
@@ -491,7 +490,7 @@ const STREAMS = [
     techLeads: ["Riya"],
     stakeholders: [
       { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
-      { name: "Matt", level: "L2" }, { name: "Rajeev Kollara", level: "L2" }
+      { name: "Matt", level: "L2" }, { name: "Rajeev", level: "L2" }
     ]
   },
   {
@@ -504,7 +503,7 @@ const STREAMS = [
     techLeads: ["Riya"],
     stakeholders: [
       { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
-      { name: "Matt", level: "L2" }, { name: "Rajeev Kollara", level: "L2" }
+      { name: "Matt", level: "L2" }, { name: "Rajeev", level: "L2" }
     ]
   },
   {
@@ -583,8 +582,8 @@ const APOLLO_REPORTING = {
   "Ashok Kumar": "Vinay Jain",
   "Srini Vemuri": "Ashok Kumar",
   /* John Hack's organization */
-  "Rajeev Kollara": "John Hack",
-  "Mandakini Kumari": "Rajeev Kollara",
+  "Rajeev": "John Hack",
+  "Mandakini Kumari": "Rajeev",
   "Kaustubh": "Mandakini Kumari",
   "Natasha": "Mandakini Kumari",
   /* Paulomi Shah's organization */
@@ -654,32 +653,6 @@ function chipEl(cls, text){
   return s;
 }
 
-/* org-chart join between two tier rows: horizontal bar with a vertical
-   stub touching the center of every box above and every box below */
-function tierConnect(nTop, nBottom){
-  const c = document.createElement("div");
-  c.className = "tier-connect";
-  const centers = n => Array.from({ length: n }, (_, i) => 100 * (2 * i + 1) / (2 * n));
-  const top = centers(nTop), bottom = centers(nBottom);
-  const all = top.concat(bottom);
-  const bar = document.createElement("i");
-  bar.className = "tc-bar";
-  bar.style.left = Math.min(...all) + "%";
-  bar.style.right = (100 - Math.max(...all)) + "%";
-  c.appendChild(bar);
-  top.forEach(x => {
-    const s = document.createElement("i");
-    s.className = "tc-up"; s.style.left = x + "%";
-    c.appendChild(s);
-  });
-  bottom.forEach(x => {
-    const s = document.createElement("i");
-    s.className = "tc-down"; s.style.left = x + "%";
-    c.appendChild(s);
-  });
-  return c;
-}
-
 /* ---------- mini person card ---------- */
 function personCard(name, role){
   const p = PEOPLE[name] || {};
@@ -735,24 +708,43 @@ STREAMS.forEach(stream => {
   const zl = document.createElement("div");
   zl.className = "zone-label apollo"; zl.textContent = "Apollo · Client Stakeholders";
   zone.appendChild(zl);
-  const tier1 = stream.stakeholders.filter(st => st.level === "L1");
-  const tier2 = stream.stakeholders.filter(st => st.level === "L2");
-  const stakeRow = (list, hasConnect) => {
-    const r = document.createElement("div");
-    r.className = "tier-row" + (hasConnect ? " has-connect" : "");
-    list.forEach(st => r.appendChild(personCard(st.name, "Apollo Stakeholder")));
-    return r;
-  };
-  if (tier1.length && tier2.length) {
-    /* two tiers: connector branches from the senior row into every box below */
-    card.classList.add("wide");
-    zone.appendChild(stakeRow(tier1, true));
-    zone.appendChild(tierConnect(tier1.length, tier2.length));
-    zone.appendChild(stakeRow(tier2, false));
-  } else if (stream.stakeholders.length) {
-    /* one tier: all stakeholders side by side, same level */
-    if (stream.stakeholders.length >= 3) card.classList.add("wide");
-    zone.appendChild(stakeRow(stream.stakeholders, false));
+  /* Reporting forest: this stream's stakeholders plus every manager above
+     them (from APOLLO_REPORTING), drawn as a top-down tree so the Apollo
+     hierarchy is intertwined with the workstream itself. */
+  const stakeNames = stream.stakeholders.map(st => st.name);
+  if (stakeNames.length) {
+    const inTree = new Set();
+    stakeNames.forEach(n => {
+      let cur = n;
+      while (cur && !inTree.has(cur)) {
+        inTree.add(cur);
+        cur = APOLLO_REPORTING[cur] || null;
+      }
+    });
+    const kidsOf = {}, forestRoots = [];
+    inTree.forEach(n => {
+      const mgr = APOLLO_REPORTING[n];
+      if (mgr && inTree.has(mgr)) (kidsOf[mgr] = kidsOf[mgr] || []).push(n);
+      else forestRoots.push(n);
+    });
+    const isStake = new Set(stakeNames);
+    const build = n => {
+      const li = document.createElement("li");
+      li.appendChild(hnodeCard(n, !isStake.has(n)));
+      const kids = kidsOf[n] || [];
+      if (kids.length) {
+        const ul = document.createElement("ul");
+        kids.forEach(k => ul.appendChild(build(k)));
+        li.appendChild(ul);
+      }
+      return li;
+    };
+    const mini = document.createElement("div");
+    mini.className = "otree mini";
+    const mul = document.createElement("ul");
+    forestRoots.forEach(r => mul.appendChild(build(r)));
+    mini.appendChild(mul);
+    zone.appendChild(mini);
   } else {
     const e = document.createElement("div");
     e.className = "empty-note"; e.textContent = "None recorded yet";
@@ -803,12 +795,12 @@ Object.keys(APOLLO_REPORTING).forEach(n => {
   if (m) (REPORTS_OF[m] = REPORTS_OF[m] || []).push(n);
 });
 
-function hnodeCard(name){
+function hnodeCard(name, ctx){
   const p = PEOPLE[name] || {};
   const d = document.createElement("div");
-  d.className = "person hnode";
+  d.className = "person hnode" + (ctx ? " ctx" : "");
   d.dataset.name = name.toLowerCase();
-  d.appendChild(makeAvatar(name, "av-32", "stake"));
+  d.appendChild(makeAvatar(name, "av-32", ctx ? "" : "stake"));
   const txt = document.createElement("div");
   txt.className = "p-text";
   const nm = document.createElement("div");
