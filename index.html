@@ -334,7 +334,6 @@
   </div>
   <div class="legend">
     <span><span class="dot" style="background:var(--btn-bg-hero)"></span>Tech Lead</span>
-    <span><span class="dot" style="background:var(--color-indigo)"></span>PM</span>
     <span><span class="dot" style="background:var(--gray-85)"></span>Team Member</span>
     <span><span class="dot" style="background:var(--gray-0)"></span>Apollo Stakeholder</span>
   </div>
@@ -610,7 +609,6 @@ function personCard(name, role){
   div.appendChild(txt);
 
   if (role === "Tech Lead") div.appendChild(chipEl("chip-lead", "Lead"));
-  else if (role === "PM") div.appendChild(chipEl("chip-pm", "PM"));
 
   div.addEventListener("click", e => { e.stopPropagation(); openPanel(name); });
   return div;
