@@ -10,6 +10,14 @@ step, no server.
 ## How to use
 
 - **Open it:** double-click `index.html`. All streams start expanded.
+- **Apollo internal hierarchy** sits between the root card and the stream row:
+  a top-down tree of the client organization (Virender Bedi, John Hack,
+  Paulomi Shah, Martin Kelly, John Cortese and their orgs, down to the
+  stream stakeholders). The **"Apollo hierarchy"** header button toggles a
+  view showing only this tree; clicking again returns to the full org.
+- Clicking anyone in the hierarchy opens their profile panel, which shows
+  their **Reporting Line** (clickable chain up to the top) and **Direct
+  Reports**, alongside any streams they're attached to.
 - **Click a stream card** to collapse/expand it in place. Inside, the hierarchy
   reads top-down like a reporting line: the **Apollo · Client Stakeholders**
   zone (light blue) sits on top, a connector line drops into the
@@ -64,6 +72,11 @@ row by a branching org-chart connector (a stub touches every box above and
 below), and the stream card widens to fit. Streams without levels render all
 stakeholders side by side in a single row — same level, no implied hierarchy.
 
+**3. `APOLLO_REPORTING`** — the client org: `person -> direct manager`
+(`null` = top of the visible hierarchy). The hierarchy tree above the streams
+and the "Reporting Line" / "Direct Reports" panel sections all derive from it.
+Add a new leader by adding their PEOPLE entry plus one line here.
+
 ## Sharing
 
 Send `index.html` over Slack or email — it is fully self-contained (Poppins
@@ -81,5 +94,10 @@ on a URL, drop the file onto any static host.
 
 - Built from the stream staffing sheet shared on 2026-07-21.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
-- The tiered stakeholder group (Nikki/Ananya/Kaustubh over Matt/Rajeev) applies
-  to both Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
+- The tiered stakeholder group (Nikki/Ananya/Kaustubh over Matt/Rajeev Kollara)
+  applies to both Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
+- Apollo hierarchy comes from the client reporting table (2026-07-21). Rajeev
+  (Quickwins stakeholder) = Rajeev Kollara, per Gaurav. Full names adopted from
+  the table (Juan Surgeon, Abdul Goffar, Swapnil Daptardar); "Niki"/"Anany" in
+  the table are Nikki/Ananya. Stephen Olano's reporting line was not in the
+  table — he shows at the top level until provided.

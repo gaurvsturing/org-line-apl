@@ -234,6 +234,40 @@
   .tier-connect .tc-bar{top:50%;height:2px;margin-top:-1px}
   .tier-connect .tc-up{top:0;bottom:50%;width:2px;transform:translateX(-50%)}
   .tier-connect .tc-down{top:50%;bottom:0;width:2px;transform:translateX(-50%)}
+
+  /* ============ Apollo internal hierarchy tree ============ */
+  .otree ul{
+    display:flex;justify-content:center;align-items:flex-start;
+    list-style:none;position:relative;padding:26px 0 0;margin:0;
+  }
+  .otree ul::before{
+    content:"";position:absolute;top:0;left:50%;width:2px;height:26px;
+    background:var(--gray-85);transform:translateX(-50%);
+  }
+  .otree li{
+    display:flex;flex-direction:column;align-items:center;
+    position:relative;padding:26px 5px 0;
+  }
+  .otree li::before,.otree li::after{
+    content:"";position:absolute;top:0;right:50%;width:50%;height:26px;
+    border-top:2px solid var(--gray-85);
+  }
+  .otree li::after{right:auto;left:50%;border-left:2px solid var(--gray-85)}
+  .otree li:only-child{padding-top:0}
+  .otree li:only-child::before,.otree li:only-child::after{display:none}
+  .otree li:first-child::before,.otree li:last-child::after{border:0 none}
+  .otree li:last-child::before{border-right:2px solid var(--gray-85)}
+
+  .hnode{
+    flex-direction:column;text-align:center;gap:5px;
+    width:128px;padding:9px 6px;margin-bottom:0;
+  }
+  .hnode .p-text{width:100%}
+  .hnode .p-name{font-size:11.5px;white-space:normal;line-height:1.25}
+  .hnode .p-title{font-size:10px}
+
+  /* toggle: Apollo hierarchy only */
+  body.apollo-only .trunk,body.apollo-only .streams-row{display:none}
   .empty-note{font-size:12px;color:var(--gray-60);font-style:italic;padding:2px 4px 8px}
 
   /* ============ avatars ============ */
@@ -338,6 +372,7 @@
     <span><span class="dot" style="background:var(--gray-0)"></span>Apollo Stakeholder</span>
   </div>
   <div class="header-btns">
+    <button class="hbtn" id="viewToggle">Apollo hierarchy</button>
     <button class="hbtn primary" id="expandAll">Expand all</button>
     <button class="hbtn" id="collapseAll">Collapse all</button>
   </div>
@@ -351,6 +386,7 @@
         <div class="r-title">Apollo Global Management</div>
         <div class="r-sub" id="rootSub"></div>
       </div>
+      <div class="otree" id="apolloTree"></div>
       <div class="trunk"></div>
       <div class="streams-row" id="streamsRow"></div>
     </div>
@@ -414,20 +450,33 @@ const PEOPLE = {
   "Deepak Singh":     { title: "", bio: "", linkedin: "", photo: "" },
   "Harshitha":        { title: "", bio: "", linkedin: "", photo: "" },
   /* --- Apollo client stakeholders --- */
-  "Nikki":            { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Ananya":           { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Kaustubh":         { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Matt":             { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Rajeev":           { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Natasha":          { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Juan":             { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Abdul":            { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Swapnil":          { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Orhan":            { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Stephen Olano":    { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Ashok Kumar":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Srini Vemuri":     { title: "Apollo", bio: "", linkedin: "", photo: "" },
-  "Nicholas Pollari": { title: "Apollo", bio: "", linkedin: "", photo: "" }
+  "Nikki":              { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Ananya":             { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Kaustubh":           { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Matt":               { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Rajeev Kollara":     { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Natasha":            { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Juan Surgeon":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Abdul Goffar":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Swapnil Daptardar":  { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Orhan":              { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Stephen Olano":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Ashok Kumar":        { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Srini Vemuri":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Nicholas Pollari":   { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  /* --- Apollo internal leadership (from the reporting table) --- */
+  "Virender Bedi":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Adrienne Capuano":   { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Mandakini Kumari":   { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "John Hack":          { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Al Youssef":         { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Paulomi Shah":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Gregory Sills":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Martin Kelly":       { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Vinay Jain":         { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Atul Singh":         { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Jason D'Silva":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "John Cortese":       { title: "Apollo", bio: "", linkedin: "", photo: "" }
 };
 
 const STREAMS = [
@@ -442,7 +491,7 @@ const STREAMS = [
     techLeads: ["Riya"],
     stakeholders: [
       { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
-      { name: "Matt", level: "L2" }, { name: "Rajeev", level: "L2" }
+      { name: "Matt", level: "L2" }, { name: "Rajeev Kollara", level: "L2" }
     ]
   },
   {
@@ -455,7 +504,7 @@ const STREAMS = [
     techLeads: ["Riya"],
     stakeholders: [
       { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
-      { name: "Matt", level: "L2" }, { name: "Rajeev", level: "L2" }
+      { name: "Matt", level: "L2" }, { name: "Rajeev Kollara", level: "L2" }
     ]
   },
   {
@@ -466,7 +515,7 @@ const STREAMS = [
       { name: "Jatin" }, { name: "Yinchang" }, { name: "Jurrien" }
     ],
     techLeads: ["Jesse"],
-    stakeholders: [ { name: "Natasha" }, { name: "Juan" } ]
+    stakeholders: [ { name: "Natasha" }, { name: "Juan Surgeon" } ]
   },
   {
     name: "Ops — Servstream",
@@ -480,7 +529,7 @@ const STREAMS = [
     accent: "#8a62d6",
     members: [ { name: "Pradeep" }, { name: "Vikrant" }, { name: "Saikumar" } ],
     techLeads: ["Rahul Ramchandran"],
-    stakeholders: [ { name: "Abdul" }, { name: "Swapnil" } ]
+    stakeholders: [ { name: "Abdul Goffar" }, { name: "Swapnil Daptardar" } ]
   },
   {
     name: "Capital Formation",
@@ -511,6 +560,44 @@ const STREAMS = [
     stakeholders: [ { name: "Nicholas Pollari" } ]
   }
 ];
+
+/* Apollo internal reporting lines: person -> direct manager (null = top).
+   Drives the hierarchy tree above the streams and the "Reporting Line"
+   section of the profile panel. From the client reporting table. */
+const APOLLO_REPORTING = {
+  /* top of the visible hierarchy */
+  "Virender Bedi": null,
+  "John Hack": null,
+  "Paulomi Shah": null,
+  "Martin Kelly": null,
+  "John Cortese": null,
+  "Stephen Olano": null,          /* reporting line not provided yet */
+  /* Virender Bedi's organization */
+  "Nikki": "Virender Bedi",
+  "Adrienne Capuano": "Virender Bedi",
+  "Ananya": "Adrienne Capuano",
+  "Abdul Goffar": "Virender Bedi",
+  "Swapnil Daptardar": "Virender Bedi",
+  "Orhan": "Virender Bedi",
+  "Vinay Jain": "Virender Bedi",
+  "Ashok Kumar": "Vinay Jain",
+  "Srini Vemuri": "Ashok Kumar",
+  /* John Hack's organization */
+  "Rajeev Kollara": "John Hack",
+  "Mandakini Kumari": "Rajeev Kollara",
+  "Kaustubh": "Mandakini Kumari",
+  "Natasha": "Mandakini Kumari",
+  /* Paulomi Shah's organization */
+  "Al Youssef": "Paulomi Shah",
+  "Matt": "Al Youssef",
+  /* Martin Kelly's organization */
+  "Gregory Sills": "Martin Kelly",
+  "Juan Surgeon": "Gregory Sills",
+  /* John Cortese's organization */
+  "Jason D'Silva": "John Cortese",
+  "Atul Singh": "Jason D'Silva",
+  "Nicholas Pollari": "Atul Singh"
+};
 /* ================================================================ */
 
 /* ---------- derived index: person -> appearances ---------- */
@@ -538,11 +625,16 @@ function autoBio(name){
   if (pms.length)    parts.push("Program Manager for " + pms.join(" and "));
   if (member.length) parts.push((parts.length ? "also on " : "Delivery team member on ") + member.join(" and "));
   if (stake.length)  parts.push("Apollo-side stakeholder for " + stake.join(" and "));
+  if (!parts.length && name in APOLLO_REPORTING) {
+    const reports = Object.keys(APOLLO_REPORTING).filter(k => APOLLO_REPORTING[k] === name);
+    return "Apollo leadership" + (reports.length ? " — manages " + reports.join(", ") : "") + ".";
+  }
   return parts.join("; ") + ".";
 }
 
 document.getElementById("rootSub").textContent =
-  STREAMS.length + " streams · " + Object.keys(roleIndex).length + " people";
+  STREAMS.length + " streams · " +
+  new Set([...Object.keys(roleIndex), ...Object.keys(APOLLO_REPORTING)]).size + " people";
 
 function makeAvatar(name, sizeCls, variant){
   const p = PEOPLE[name] || {};
@@ -704,6 +796,49 @@ STREAMS.forEach(stream => {
   row.appendChild(col);
 });
 
+/* ---------- Apollo internal hierarchy (sits above the streams) ---------- */
+const REPORTS_OF = {};
+Object.keys(APOLLO_REPORTING).forEach(n => {
+  const m = APOLLO_REPORTING[n];
+  if (m) (REPORTS_OF[m] = REPORTS_OF[m] || []).push(n);
+});
+
+function hnodeCard(name){
+  const p = PEOPLE[name] || {};
+  const d = document.createElement("div");
+  d.className = "person hnode";
+  d.dataset.name = name.toLowerCase();
+  d.appendChild(makeAvatar(name, "av-32", "stake"));
+  const txt = document.createElement("div");
+  txt.className = "p-text";
+  const nm = document.createElement("div");
+  nm.className = "p-name"; nm.textContent = name;
+  const tt = document.createElement("div");
+  tt.className = "p-title"; tt.textContent = p.title || "Apollo";
+  txt.appendChild(nm); txt.appendChild(tt);
+  d.appendChild(txt);
+  d.addEventListener("click", e => { e.stopPropagation(); openPanel(name); });
+  return d;
+}
+
+function hierNode(name){
+  const li = document.createElement("li");
+  li.appendChild(hnodeCard(name));
+  const kids = REPORTS_OF[name] || [];
+  if (kids.length){
+    const ul = document.createElement("ul");
+    kids.forEach(k => ul.appendChild(hierNode(k)));
+    li.appendChild(ul);
+  }
+  return li;
+}
+
+const treeUl = document.createElement("ul");
+Object.keys(APOLLO_REPORTING)
+  .filter(n => !APOLLO_REPORTING[n])
+  .forEach(r => treeUl.appendChild(hierNode(r)));
+document.getElementById("apolloTree").appendChild(treeUl);
+
 /* connector line: span from center of first column to center of last */
 function fitConnector(){
   const cols = row.querySelectorAll(".stream-col");
@@ -714,6 +849,12 @@ function fitConnector(){
 }
 fitConnector();
 window.addEventListener("resize", fitConnector);
+
+/* ---------- view toggle: full org vs Apollo hierarchy only ---------- */
+document.getElementById("viewToggle").addEventListener("click", () => {
+  const on = document.body.classList.toggle("apollo-only");
+  document.getElementById("viewToggle").textContent = on ? "Show full org" : "Apollo hierarchy";
+});
 
 /* ---------- expand / collapse ---------- */
 document.getElementById("expandAll").addEventListener("click", () => {
@@ -755,6 +896,11 @@ searchInput.addEventListener("input", () => {
       col.classList.add("dimmed");
     }
   });
+
+  /* also highlight matches in the Apollo hierarchy tree */
+  document.querySelectorAll(".otree .person").forEach(p =>
+    p.classList.toggle("match", !!q && p.dataset.name.includes(q)));
+
   fitConnector();
 });
 clearBtn.addEventListener("click", () => {
@@ -792,6 +938,8 @@ function openPanel(name){
                 r === "Apollo Stakeholder" ? "chip-stake" : "chip-member";
     chipsHost.appendChild(chipEl(cls, r));
   });
+  if (!entries.length && name in APOLLO_REPORTING)
+    chipsHost.appendChild(chipEl("chip-stake", "Apollo Leadership"));
 
   document.getElementById("panelBio").textContent = p.bio || autoBio(name);
 
@@ -802,25 +950,64 @@ function openPanel(name){
 
   const body = document.getElementById("panelBody");
   body.innerHTML = "";
-  const sec = document.createElement("div");
-  sec.className = "panel-sec";
-  sec.innerHTML = "<h4>Streams (" + entries.length + ")</h4>";
-  entries.forEach(e => {
-    const stream = STREAMS.find(s => s.name === e.stream);
-    const chip = document.createElement("div");
-    chip.className = "panel-chip";
-    chip.style.setProperty("--chip-accent", stream ? stream.accent : "var(--color-blue)");
-    chip.innerHTML = "<span>" + e.stream + "</span><span class='chip-role'>" + e.role + "</span>";
-    chip.addEventListener("click", () => {
-      const col = document.querySelector('.stream-col[data-stream="' + e.stream.toLowerCase() + '"]');
-      if (col) {
-        col.classList.add("open"); fitConnector();
-        col.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-      }
+  if (entries.length) {
+    const sec = document.createElement("div");
+    sec.className = "panel-sec";
+    sec.innerHTML = "<h4>Streams (" + entries.length + ")</h4>";
+    entries.forEach(e => {
+      const stream = STREAMS.find(s => s.name === e.stream);
+      const chip = document.createElement("div");
+      chip.className = "panel-chip";
+      chip.style.setProperty("--chip-accent", stream ? stream.accent : "var(--color-blue)");
+      chip.innerHTML = "<span>" + e.stream + "</span><span class='chip-role'>" + e.role + "</span>";
+      chip.addEventListener("click", () => {
+        const col = document.querySelector('.stream-col[data-stream="' + e.stream.toLowerCase() + '"]');
+        if (col) {
+          col.classList.add("open"); fitConnector();
+          col.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        }
+      });
+      sec.appendChild(chip);
     });
-    sec.appendChild(chip);
-  });
-  body.appendChild(sec);
+    body.appendChild(sec);
+  }
+
+  /* Apollo reporting line + direct reports (from APOLLO_REPORTING) */
+  if (Object.prototype.hasOwnProperty.call(APOLLO_REPORTING, name)) {
+    const chain = [];
+    let cur = APOLLO_REPORTING[name];
+    while (cur) { chain.push(cur); cur = APOLLO_REPORTING[cur]; }
+    if (chain.length) {
+      const rs = document.createElement("div");
+      rs.className = "panel-sec";
+      rs.innerHTML = "<h4>Reporting Line</h4>";
+      chain.forEach((mgr, i) => {
+        const chip = document.createElement("div");
+        chip.className = "panel-chip";
+        chip.style.setProperty("--chip-accent", "var(--gray-0)");
+        chip.innerHTML = "<span>" + mgr + "</span><span class='chip-role'>" +
+          (i === 0 ? "Manager" : "Level " + (i + 1)) + "</span>";
+        chip.addEventListener("click", () => openPanel(mgr));
+        rs.appendChild(chip);
+      });
+      body.appendChild(rs);
+    }
+    const reports = Object.keys(APOLLO_REPORTING).filter(k => APOLLO_REPORTING[k] === name);
+    if (reports.length) {
+      const ds = document.createElement("div");
+      ds.className = "panel-sec";
+      ds.innerHTML = "<h4>Direct Reports (" + reports.length + ")</h4>";
+      reports.forEach(r => {
+        const chip = document.createElement("div");
+        chip.className = "panel-chip";
+        chip.style.setProperty("--chip-accent", "var(--gray-0)");
+        chip.innerHTML = "<span>" + r + "</span><span class='chip-role'>Apollo</span>";
+        chip.addEventListener("click", () => openPanel(r));
+        ds.appendChild(chip);
+      });
+      body.appendChild(ds);
+    }
+  }
 
   document.querySelectorAll(".person").forEach(pe =>
     pe.classList.toggle("selected", pe.dataset.name === name.toLowerCase()));
