@@ -246,10 +246,9 @@
   .hnode .p-text{width:100%}
   .hnode .p-name{font-size:11.5px;white-space:normal;line-height:1.25}
   .hnode .p-title{font-size:10px}
-  /* manager shown only as reporting context (not a stream stakeholder) */
+  /* Apollo leadership: managers above the stakeholders (indigo, dashed) */
   .hnode.ctx{border-style:dashed;box-shadow:none}
-  .hnode.ctx .p-name{color:var(--gray-30)}
-  .hnode.ctx .avatar{background:var(--gray-85);color:var(--gray-30)}
+  .hnode.ctx .avatar{background:var(--color-indigo);color:#fff}
 
   /* compact reporting forest inside a stream's client zone */
   .otree.mini{display:flex;justify-content:center}
@@ -278,6 +277,7 @@
   .avatar img{width:100%;height:100%;object-fit:cover}
   .avatar.lead{background:var(--btn-bg-hero);color:#fff}
   .avatar.stake{background:var(--gray-0);color:#fff}
+  .avatar.leader{background:var(--color-indigo);color:#fff}
   .av-32{width:32px;height:32px;font-size:12px}
   .av-72{width:72px;height:72px;font-size:24px}
 
@@ -291,6 +291,7 @@
   .chip-pm{background:var(--color-indigo);color:#fff}
   .chip-member{background:var(--gray-85);color:var(--gray-30)}
   .chip-stake{background:var(--gray-0);color:#fff}
+  .chip-leader{background:var(--color-indigo);color:#fff}
 
   /* search dimming */
   .stream-col.dimmed{opacity:.22}
@@ -370,6 +371,7 @@
     <span><span class="dot" style="background:var(--btn-bg-hero)"></span>Tech Lead</span>
     <span><span class="dot" style="background:var(--gray-85)"></span>Team Member</span>
     <span><span class="dot" style="background:var(--gray-0)"></span>Apollo Stakeholder</span>
+    <span><span class="dot" style="background:var(--color-indigo)"></span>Apollo Leadership</span>
   </div>
   <div class="header-btns">
     <button class="hbtn" id="viewToggle">Apollo hierarchy</button>
@@ -816,7 +818,9 @@ function hnodeCard(name, ctx){
 
 function hierNode(name){
   const li = document.createElement("li");
-  li.appendChild(hnodeCard(name));
+  /* indigo leadership styling for anyone who isn't a stream stakeholder */
+  const isLeader = !(roleIndex[name] || []).some(e => e.role === "Apollo Stakeholder");
+  li.appendChild(hnodeCard(name, isLeader));
   const kids = REPORTS_OF[name] || [];
   if (kids.length){
     const ul = document.createElement("ul");
@@ -938,6 +942,7 @@ function openPanel(name){
   avatarHost.innerHTML = "";
   avatarHost.className = "avatar av-72" +
     (entries.some(e => e.role === "Tech Lead") ? " lead" :
+     !entries.length && name in APOLLO_REPORTING ? " leader" :
      entries.every(e => e.role === "Apollo Stakeholder") ? " stake" : "");
   if (p.photo) {
     const img = document.createElement("img"); img.src = p.photo; img.alt = name;
@@ -956,7 +961,7 @@ function openPanel(name){
     chipsHost.appendChild(chipEl(cls, r));
   });
   if (!entries.length && name in APOLLO_REPORTING)
-    chipsHost.appendChild(chipEl("chip-stake", "Apollo Leadership"));
+    chipsHost.appendChild(chipEl("chip-leader", "Apollo Leadership"));
 
   document.getElementById("panelBio").textContent = p.bio || autoBio(name);
 

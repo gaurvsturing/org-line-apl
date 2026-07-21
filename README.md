@@ -13,8 +13,9 @@ step, no server.
 - **Apollo hierarchy is intertwined with each workstream:** inside a stream's
   Apollo zone, every stakeholder's reporting chain is drawn above them as a
   connected tree (e.g., CRE shows John Cortese → Jason D'Silva → Atul Singh →
-  Nicholas Pollari). Managers who are only reporting context (not stream
-  stakeholders) appear as dashed grey cards. The **"Apollo hierarchy"** header
+  Nicholas Pollari). **Apollo Leadership** (managers above the stakeholders)
+  render as dashed cards with indigo avatars — distinct from the solid
+  dark-avatar stakeholder cards — and have their own legend entry in the header. The **"Apollo hierarchy"** header
   button switches to a standalone tree of the full client organization;
   clicking again returns to the streams.
 - Clicking anyone in the hierarchy opens their profile panel, which shows
