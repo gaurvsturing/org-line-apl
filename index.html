@@ -295,6 +295,7 @@
   /* search dimming */
   .stream-col.dimmed{opacity:.22}
   .person.match{border-color:var(--color-blue);background:var(--blue-95)}
+  .person.hit-focus{border-color:var(--color-blue);box-shadow:var(--shadow-hero)}
 
   /* ============ side panel ============ */
   #panel{
@@ -403,7 +404,7 @@
   <div id="panelBody"></div>
 </aside>
 
-<footer class="hint">Click a stream to expand it · Click a person for their profile · Drag the canvas to pan</footer>
+<footer class="hint">Click a stream to expand it · Click a person for their profile · Search jumps to the match — Enter cycles · Drag to pan</footer>
 
 <script>
 /* ================================================================
@@ -865,6 +866,13 @@ document.getElementById("rootNode").addEventListener("click", () => {
 /* ---------- search ---------- */
 const searchInput = document.getElementById("search");
 const clearBtn = document.getElementById("clearSearch");
+let searchHits = [], searchHitIndex = 0;
+
+function focusHit(el){
+  document.querySelectorAll(".person.hit-focus").forEach(p => p.classList.remove("hit-focus"));
+  el.classList.add("hit-focus");
+  el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+}
 
 searchInput.addEventListener("input", () => {
   const q = searchInput.value.trim().toLowerCase();
@@ -894,6 +902,23 @@ searchInput.addEventListener("input", () => {
     p.classList.toggle("match", !!q && p.dataset.name.includes(q)));
 
   fitConnector();
+
+  /* auto-scroll the canvas to the first visible match; Enter cycles the rest */
+  document.querySelectorAll(".person.hit-focus").forEach(p => p.classList.remove("hit-focus"));
+  searchHits = []; searchHitIndex = 0;
+  if (q.length >= 2) {
+    searchHits = [...document.querySelectorAll(".person.match")]
+      .filter(el => el.offsetParent !== null);
+    if (searchHits.length) focusHit(searchHits[0]);
+  }
+});
+
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter" && searchHits.length) {
+    e.preventDefault();
+    searchHitIndex = (searchHitIndex + 1) % searchHits.length;
+    focusHit(searchHits[searchHitIndex]);
+  }
 });
 clearBtn.addEventListener("click", () => {
   searchInput.value = "";

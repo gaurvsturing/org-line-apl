@@ -31,8 +31,10 @@ step, no server.
 - **Click any person** to open the profile side panel: photo, title, role
   chips, bio, a LinkedIn button, and every stream they belong to. Clicking a
   stream row in the panel jumps to and opens that stream on the canvas.
-- **Search** (top bar) highlights matching people, opens their streams, and
-  dims everything else.
+- **Search** (top bar) highlights matching people, opens their streams, dims
+  everything else, and **auto-scrolls the canvas to the first match** (after
+  2+ characters). Press **Enter** to cycle through all matches — handy for
+  people who appear in several streams.
 - **Drag** empty canvas space to pan; Esc closes the panel.
 - The Turing logo (header) and Apollo Global Management logo (root node) are
   embedded as base64 data URIs from `../BFSI Web App/turing-logo.jpg` and
