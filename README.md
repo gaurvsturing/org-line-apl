@@ -10,10 +10,12 @@ step, no server.
 ## How to use
 
 - **Open it:** double-click `index.html`. All streams start expanded.
-- **Click a stream card** to collapse/expand it in place. Inside, people appear as mini
-  profile cards (avatar, name, title, role chip) grouped into **Tech Lead**,
-  **Turing Team**, and **Apollo · Client Stakeholders** (the client group sits
-  in a light-blue zone so the client side is unmistakable).
+- **Click a stream card** to collapse/expand it in place. Inside, the hierarchy
+  reads top-down like a reporting line: the **Apollo · Client Stakeholders**
+  zone (light blue) sits on top, a connector line drops into the
+  **Turing · Delivery Team** zone (white), which shows the **Tech Lead** first
+  and then a line down to the **Team Members**. People appear as mini profile
+  cards (avatar, name, title, role chip).
 - **Click the Apollo root node** to expand/collapse all streams; the header
   also has Expand all / Collapse all buttons.
 - **Click any person** to open the profile side panel: photo, title, role

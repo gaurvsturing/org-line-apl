@@ -167,7 +167,6 @@
   .stream-head{padding:16px 16px 14px}
   .stream-name{font-size:15px;font-weight:600;letter-spacing:-.025em;line-height:1.35;color:var(--gray-0);display:flex;align-items:center;gap:8px}
   .stream-name .s-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:var(--stream-accent,var(--color-blue))}
-  .stream-meta{font-size:12px;color:var(--gray-40);margin-top:6px;display:flex;align-items:center;gap:6px}
   .chev{margin-left:auto;transition:transform .2s var(--ease);color:var(--gray-60);flex-shrink:0}
   .stream-col.open .chev{transform:rotate(180deg)}
 
@@ -179,9 +178,20 @@
 
   .sec-label{
     font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;
-    color:var(--gray-40);margin:12px 2px 7px;
+    color:var(--gray-40);margin:10px 2px 7px;
   }
-  .sec-label:first-child{margin-top:2px}
+  .zone-label{
+    font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;
+    margin:2px 2px 8px;
+  }
+  .zone-label.apollo{color:#1d7a4f}   /* Apollo brand green */
+  .zone-label.turing{color:var(--color-blue)}
+  .v-connect{width:2px;height:18px;background:var(--gray-85);margin:0 auto}
+  .turing-zone{
+    background:#fff;border:1px solid var(--gray-90);
+    border-radius:var(--radius-md);padding:8px 8px 2px;
+  }
+  .turing-zone .sec-label:first-of-type{margin-top:2px}
 
   /* ---- mini person card (inside stream) ---- */
   .person{
@@ -199,10 +209,10 @@
   .person .p-title{font-size:11px;color:var(--gray-40);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .person .chip{margin-left:auto}
 
-  /* stakeholder zone inside stream body */
+  /* stakeholder zone (client side, sits on top) */
   .client-zone{
     background:var(--blue-95);border:1px solid var(--blue-90);
-    border-radius:var(--radius-md);padding:8px 8px 2px;margin-top:4px;
+    border-radius:var(--radius-md);padding:8px 8px 2px;
   }
   .client-zone .person{background:#fff}
   .empty-note{font-size:12px;color:var(--gray-60);font-style:italic;padding:2px 4px 8px}
@@ -575,9 +585,7 @@ STREAMS.forEach(stream => {
   const head = document.createElement("div");
   head.className = "stream-head";
   head.innerHTML =
-    '<div class="stream-name"><span class="s-dot"></span><span>' + stream.name + '</span></div>' +
-    '<div class="stream-meta"><span>' + stream.members.length + ' team · ' +
-    stream.stakeholders.length + ' stakeholder' + (stream.stakeholders.length !== 1 ? 's' : '') + '</span>' +
+    '<div class="stream-name"><span class="s-dot"></span><span>' + stream.name + '</span>' +
     '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>';
   card.appendChild(head);
 
@@ -585,24 +593,12 @@ STREAMS.forEach(stream => {
   body.className = "stream-body";
   body.addEventListener("click", e => e.stopPropagation());
 
-  if (stream.techLeads.length) {
-    const l = document.createElement("div");
-    l.className = "sec-label"; l.textContent = "Tech Lead";
-    body.appendChild(l);
-    stream.techLeads.forEach(n => body.appendChild(personCard(n, "Tech Lead")));
-  }
-
-  const ml = document.createElement("div");
-  ml.className = "sec-label"; ml.textContent = "Turing Team";
-  body.appendChild(ml);
-  stream.members.forEach(m =>
-    body.appendChild(personCard(m.name, m.role === "PM" ? "PM" : "Team Member")));
-
-  const sl = document.createElement("div");
-  sl.className = "sec-label"; sl.textContent = "Apollo · Client Stakeholders";
-  body.appendChild(sl);
+  /* Apollo (client) zone sits on TOP — the stakeholders this stream reports into */
   const zone = document.createElement("div");
   zone.className = "client-zone";
+  const zl = document.createElement("div");
+  zl.className = "zone-label apollo"; zl.textContent = "Apollo · Client Stakeholders";
+  zone.appendChild(zl);
   if (stream.stakeholders.length) {
     stream.stakeholders.forEach(st => zone.appendChild(personCard(st.name, "Apollo Stakeholder", st.level)));
   } else {
@@ -611,6 +607,36 @@ STREAMS.forEach(stream => {
     zone.appendChild(e);
   }
   body.appendChild(zone);
+
+  /* connector line: Apollo -> Turing */
+  const vc = document.createElement("div");
+  vc.className = "v-connect";
+  body.appendChild(vc);
+
+  /* Turing zone: Tech Lead first, then line down to team members */
+  const tz = document.createElement("div");
+  tz.className = "turing-zone";
+  const tzl = document.createElement("div");
+  tzl.className = "zone-label turing"; tzl.textContent = "Turing · Delivery Team";
+  tz.appendChild(tzl);
+
+  if (stream.techLeads.length) {
+    const l = document.createElement("div");
+    l.className = "sec-label"; l.textContent = "Tech Lead";
+    tz.appendChild(l);
+    stream.techLeads.forEach(n => tz.appendChild(personCard(n, "Tech Lead")));
+    const vc2 = document.createElement("div");
+    vc2.className = "v-connect";
+    tz.appendChild(vc2);
+  }
+
+  const ml = document.createElement("div");
+  ml.className = "sec-label"; ml.textContent = "Team Members";
+  tz.appendChild(ml);
+  stream.members.forEach(m =>
+    tz.appendChild(personCard(m.name, m.role === "PM" ? "PM" : "Team Member")));
+
+  body.appendChild(tz);
 
   card.appendChild(body);
   card.addEventListener("click", () => { col.classList.toggle("open"); fitConnector(); });
