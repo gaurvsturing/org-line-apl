@@ -518,6 +518,7 @@ const PEOPLE = {
   "Swapnil Daptardar":  { title: "Principal, Distinguished Engineer", bio: "", linkedin: "", photo: "" },
   "Orhan Yarar":        { title: "Director", bio: "", linkedin: "", photo: "" },
   "Stephen Olano":      { title: "Apollo", bio: "", linkedin: "", photo: "" },
+  "Saumil Kapadia":     { title: "Apollo", bio: "", linkedin: "", photo: "" },
   "Ashok Kumar":        { title: "Principal", bio: "", linkedin: "", photo: "" },
   "Srinivas Vemuri":    { title: "Principal", bio: "", linkedin: "", photo: "" },
   "Nicholas Pollari":   { title: "Principal", bio: "", linkedin: "", photo: "" },
@@ -639,14 +640,13 @@ const APOLLO_REPORTING = {
   "Jamey Lamanna": "Bryon Vielehr",
   "Paulomi Shah": "Bryon Vielehr",
   "John Cortese": "John Zito",
-  "Stephen Olano": null,          /* reporting line not provided yet */
   /* Virender Bedi's organization */
   "Virender Bedi": "Jamey Lamanna",
   "Niki Collette": "Virender Bedi",
   "Adrienne Capuano": "Virender Bedi",
   "Ananya Sharma": "Adrienne Capuano",
   "Swapnil Daptardar": "Virender Bedi",
-  "Abdul Goffar": "Swapnil Daptardar",   /* Abdul sits under Swapnil (per Gaurav) */
+  "Abdul Goffar": "Virender Bedi",
   "Orhan Yarar": "Virender Bedi",
   "Vinay Jain": "Virender Bedi",
   "Ashok Kumar": "Vinay Jain",
@@ -666,7 +666,9 @@ const APOLLO_REPORTING = {
   /* John Cortese's organization */
   "Jason D'Silva": "John Cortese",
   "Atul Singh": "Jason D'Silva",
-  "Nicholas Pollari": "Atul Singh"
+  "Nicholas Pollari": "Atul Singh",
+  "Saumil Kapadia": "Jason D'Silva",
+  "Stephen Olano": "Saumil Kapadia"
 };
 /* ================================================================ */
 
@@ -924,7 +926,7 @@ window.addEventListener("resize", fitConnector);
 /* ---------- view toggle: full org vs Apollo hierarchy only ---------- */
 document.getElementById("viewToggle").addEventListener("click", () => {
   const on = document.body.classList.toggle("apollo-only");
-  document.getElementById("viewToggle").textContent = on ? "Show full org" : "Apollo hierarchy";
+  document.getElementById("viewToggle").textContent = on ? "Work streams" : "Apollo hierarchy";
 });
 
 /* ---------- expand / collapse ---------- */

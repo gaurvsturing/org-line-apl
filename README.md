@@ -123,5 +123,11 @@ on a URL, drop the file onto any static host.
   **Rajeev Kollara is Apollo Leadership** (not a stream stakeholder): he
   appears in the Quickwins chains above Kaustubh and reports to John Hack.
   Full names adopted for Juan Surgeon, Abdul Goffar, Swapnil Daptardar;
-  "Niki"/"Anany" in the table are Nikki/Ananya. Stephen Olano's reporting
-  line was not in the table — he shows without a chain until provided.
+  "Niki"/"Anany" in the table are Nikki/Ananya.
+- Stephen Olano's chain (per Gaurav, 2026-07-22): Stephen Olano →
+  Saumil Kapadia → Jason D'Silva → John Cortese → John Zito → Jim Zelter →
+  Marc Rowan. Saumil Kapadia's title is not known yet.
+- Abdul Goffar and Swapnil Daptardar both report directly to Virender Bedi
+  (final per Gaurav, 2026-07-22 — an interim change had Abdul under Swapnil).
+- The header toggle reads "Apollo hierarchy" in the streams view and
+  "Work streams" in the hierarchy view.
