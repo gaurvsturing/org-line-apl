@@ -516,7 +516,7 @@ const STREAMS = [
     ],
     techLeads: ["Riya"],
     stakeholders: [
-      { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
+      { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
       { name: "Matt", level: "L2" }
     ]
   },
@@ -529,7 +529,7 @@ const STREAMS = [
     ],
     techLeads: ["Riya"],
     stakeholders: [
-      { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" }, { name: "Kaustubh", level: "L1" },
+      { name: "Nikki", level: "L1" }, { name: "Ananya", level: "L1" },
       { name: "Matt", level: "L2" }
     ]
   },
@@ -1017,6 +1017,28 @@ function openPanel(name){
     });
     body.appendChild(sec);
   }
+
+  /* Turing team behind each stream this person is a stakeholder of */
+  entries.filter(e => e.role === "Apollo Stakeholder").forEach(e => {
+    const s = STREAMS.find(x => x.name === e.stream);
+    if (!s) return;
+    const ts = document.createElement("div");
+    ts.className = "panel-sec";
+    ts.innerHTML = "<h4>Turing Team · " + e.stream + "</h4>";
+    const addChip = (pName, role) => {
+      const chip = document.createElement("div");
+      chip.className = "panel-chip";
+      chip.style.setProperty("--chip-accent", "var(--color-blue)");
+      chip.innerHTML = "<span>" + pName + "</span><span class='chip-role'>" + role + "</span>";
+      chip.addEventListener("click", () => openPanel(pName));
+      ts.appendChild(chip);
+    };
+    s.techLeads.forEach(t => addChip(t, "Tech Lead"));
+    s.members
+      .filter(m => !s.techLeads.includes(m.name))
+      .forEach(m => addChip(m.name, m.role === "PM" ? "Program Manager" : "Team Member"));
+    body.appendChild(ts);
+  });
 
   /* Apollo reporting line + direct reports (from APOLLO_REPORTING) */
   if (Object.prototype.hasOwnProperty.call(APOLLO_REPORTING, name)) {

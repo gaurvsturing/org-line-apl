@@ -20,7 +20,9 @@ step, no server.
   clicking again returns to the streams.
 - Clicking anyone in the hierarchy opens their profile panel, which shows
   their **Reporting Line** (clickable chain up to the top) and **Direct
-  Reports**, alongside any streams they're attached to.
+  Reports**, alongside any streams they're attached to. Stakeholders also
+  get a **Turing Team** section per stream — tech lead plus every team
+  member behind their workstream, each clickable.
 - **Click a stream card** to collapse/expand it in place. Inside, the hierarchy
   reads top-down like a reporting line: the **Apollo · Client Stakeholders**
   zone (light blue) sits on top, a connector line drops into the
@@ -100,8 +102,8 @@ on a URL, drop the file onto any static host.
 
 - Built from the stream staffing sheet shared on 2026-07-21.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
-- The stakeholder group (Nikki, Ananya, Kaustubh, Matt, Rajeev) applies to both
-  Finance — Quickwins and Ops — Quickwins, per Gaurav's confirmation.
+- Quickwins stakeholders (per Gaurav, 2026-07-22): Finance — Quickwins has
+  Ananya, Kaustubh, Matt; Ops — Quickwins has Nikki, Ananya, Matt.
 - Apollo hierarchy comes from the client reporting table (2026-07-21).
   **Rajeev Kollara is Apollo Leadership** (not a stream stakeholder): he
   appears in the Quickwins chains above Kaustubh and reports to John Hack.
