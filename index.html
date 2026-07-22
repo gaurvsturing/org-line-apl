@@ -345,7 +345,34 @@
     cursor:pointer;transition:all .15s var(--ease);
   }
   .panel-chip:hover{box-shadow:var(--shadow-card);transform:translateY(-1px)}
+  .panel-chip > span:first-child{flex:1}
   .panel-chip .chip-role{font-size:10px;font-weight:600;color:var(--gray-40);text-transform:uppercase;letter-spacing:.7px;text-align:right}
+
+  /* expandable Turing teams under a direct report */
+  .chev-btn{
+    border:none;background:none;cursor:pointer;color:var(--gray-40);
+    padding:2px;display:flex;align-items:center;flex-shrink:0;
+  }
+  .chev-btn svg{transition:transform .2s var(--ease)}
+  .report-item.open .chev-btn svg{transform:rotate(180deg)}
+  .chip-sub{
+    display:none;margin:2px 0 10px 12px;
+    border-left:2px solid var(--gray-90);padding-left:10px;
+  }
+  .report-item.open .chip-sub{display:block}
+  .chip-sub-stream{
+    font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--color-blue);margin:8px 0 3px;
+  }
+  .chip-sub-row{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    font-size:12.5px;font-weight:500;padding:5px 8px;border-radius:6px;cursor:pointer;
+  }
+  .chip-sub-row:hover{background:var(--blue-95)}
+  .chip-sub-row span:last-child{
+    font-size:10px;font-weight:600;color:var(--gray-40);
+    text-transform:uppercase;letter-spacing:.5px;text-align:right;
+  }
 
   footer.hint{
     position:fixed;bottom:0;left:0;right:0;z-index:70;
@@ -956,6 +983,22 @@ clearBtn.addEventListener("click", () => {
 
 /* ---------- side panel (person profile) ---------- */
 const panel = document.getElementById("panel");
+
+/* streams whose Turing teams sit under this person's Apollo org
+   (their own stakeholder streams plus those of everyone below them) */
+function subtreeStakeStreams(name){
+  const streams = new Set();
+  const visit = n => {
+    (roleIndex[n] || []).forEach(e => {
+      if (e.role === "Apollo Stakeholder") streams.add(e.stream);
+    });
+    Object.keys(APOLLO_REPORTING)
+      .filter(k => APOLLO_REPORTING[k] === n)
+      .forEach(visit);
+  };
+  visit(name);
+  return [...streams];
+}
 const LI_ICON = '<svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.3 18.4v-7.9H5.7v7.9h2.6zM7 9.4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm11.4 9v-4.5c0-2.4-1.3-3.6-3-3.6-1.4 0-2 .8-2.4 1.3v-1.1h-2.6c0 .7 0 7.9 0 7.9H13v-4.4c0-.2 0-.5.1-.6.2-.5.6-1 1.4-1 1 0 1.3.7 1.3 1.8v4.2h2.6z"/></svg>';
 
 function openPanel(name){
@@ -1018,6 +1061,28 @@ function openPanel(name){
     body.appendChild(sec);
   }
 
+  /* Apollo reporting line — directly below the streams */
+  if (Object.prototype.hasOwnProperty.call(APOLLO_REPORTING, name)) {
+    const chain = [];
+    let cur = APOLLO_REPORTING[name];
+    while (cur) { chain.push(cur); cur = APOLLO_REPORTING[cur]; }
+    if (chain.length) {
+      const rs = document.createElement("div");
+      rs.className = "panel-sec";
+      rs.innerHTML = "<h4>Reporting Line</h4>";
+      chain.forEach((mgr, i) => {
+        const chip = document.createElement("div");
+        chip.className = "panel-chip";
+        chip.style.setProperty("--chip-accent", "var(--gray-0)");
+        chip.innerHTML = "<span>" + mgr + "</span><span class='chip-role'>" +
+          (i === 0 ? "Manager" : "Level " + (i + 1)) + "</span>";
+        chip.addEventListener("click", () => openPanel(mgr));
+        rs.appendChild(chip);
+      });
+      body.appendChild(rs);
+    }
+  }
+
   /* Turing team behind each stream this person is a stakeholder of */
   entries.filter(e => e.role === "Apollo Stakeholder").forEach(e => {
     const s = STREAMS.find(x => x.name === e.stream);
@@ -1040,38 +1105,60 @@ function openPanel(name){
     body.appendChild(ts);
   });
 
-  /* Apollo reporting line + direct reports (from APOLLO_REPORTING) */
+  /* Direct reports — each expandable to the Turing teams under their org */
   if (Object.prototype.hasOwnProperty.call(APOLLO_REPORTING, name)) {
-    const chain = [];
-    let cur = APOLLO_REPORTING[name];
-    while (cur) { chain.push(cur); cur = APOLLO_REPORTING[cur]; }
-    if (chain.length) {
-      const rs = document.createElement("div");
-      rs.className = "panel-sec";
-      rs.innerHTML = "<h4>Reporting Line</h4>";
-      chain.forEach((mgr, i) => {
-        const chip = document.createElement("div");
-        chip.className = "panel-chip";
-        chip.style.setProperty("--chip-accent", "var(--gray-0)");
-        chip.innerHTML = "<span>" + mgr + "</span><span class='chip-role'>" +
-          (i === 0 ? "Manager" : "Level " + (i + 1)) + "</span>";
-        chip.addEventListener("click", () => openPanel(mgr));
-        rs.appendChild(chip);
-      });
-      body.appendChild(rs);
-    }
     const reports = Object.keys(APOLLO_REPORTING).filter(k => APOLLO_REPORTING[k] === name);
     if (reports.length) {
       const ds = document.createElement("div");
       ds.className = "panel-sec";
       ds.innerHTML = "<h4>Direct Reports (" + reports.length + ")</h4>";
       reports.forEach(r => {
+        const item = document.createElement("div");
+        item.className = "report-item";
+
         const chip = document.createElement("div");
         chip.className = "panel-chip";
         chip.style.setProperty("--chip-accent", "var(--gray-0)");
         chip.innerHTML = "<span>" + r + "</span><span class='chip-role'>Apollo</span>";
         chip.addEventListener("click", () => openPanel(r));
-        ds.appendChild(chip);
+        item.appendChild(chip);
+
+        const subStreams = subtreeStakeStreams(r);
+        if (subStreams.length) {
+          const btn = document.createElement("button");
+          btn.className = "chev-btn";
+          btn.title = "Show the Turing teams under " + r;
+          btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>';
+          btn.addEventListener("click", ev => {
+            ev.stopPropagation();
+            item.classList.toggle("open");
+          });
+          chip.appendChild(btn);
+
+          const sub = document.createElement("div");
+          sub.className = "chip-sub";
+          subStreams.forEach(sn => {
+            const s = STREAMS.find(x => x.name === sn);
+            if (!s) return;
+            const lbl = document.createElement("div");
+            lbl.className = "chip-sub-stream";
+            lbl.textContent = sn;
+            sub.appendChild(lbl);
+            const addRow = (pn, role) => {
+              const row = document.createElement("div");
+              row.className = "chip-sub-row";
+              row.innerHTML = "<span>" + pn + "</span><span>" + role + "</span>";
+              row.addEventListener("click", () => openPanel(pn));
+              sub.appendChild(row);
+            };
+            s.techLeads.forEach(t => addRow(t, "Tech Lead"));
+            s.members
+              .filter(m => !s.techLeads.includes(m.name))
+              .forEach(m => addRow(m.name, m.role === "PM" ? "PM" : "Team"));
+          });
+          item.appendChild(sub);
+        }
+        ds.appendChild(item);
       });
       body.appendChild(ds);
     }

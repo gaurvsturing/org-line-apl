@@ -18,11 +18,13 @@ step, no server.
   dark-avatar stakeholder cards — and have their own legend entry in the header. The **"Apollo hierarchy"** header
   button switches to a standalone tree of the full client organization;
   clicking again returns to the streams.
-- Clicking anyone in the hierarchy opens their profile panel, which shows
-  their **Reporting Line** (clickable chain up to the top) and **Direct
-  Reports**, alongside any streams they're attached to. Stakeholders also
-  get a **Turing Team** section per stream — tech lead plus every team
-  member behind their workstream, each clickable.
+- Clicking anyone in the hierarchy opens their profile panel. Sections, in
+  order: **Streams**, **Reporting Line** (clickable chain up to the top),
+  **Turing Team** per stakeholder stream (tech lead + members, each
+  clickable), then **Direct Reports**. Every direct report whose org has
+  Turing teams under it gets a **chevron dropdown** that expands the teams
+  inline — so from a leader like Virender Bedi you can open each report and
+  see exactly which Turing people work under their part of the org.
 - **Click a stream card** to collapse/expand it in place. Inside, the hierarchy
   reads top-down like a reporting line: the **Apollo · Client Stakeholders**
   zone (light blue) sits on top, a connector line drops into the
