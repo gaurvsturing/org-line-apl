@@ -105,7 +105,17 @@ on a URL, drop the file onto any static host.
 - Built from the stream staffing sheet shared on 2026-07-21.
 - "Ali" appeared struck through under CoreAI in the source sheet, so he is excluded.
 - Quickwins stakeholders (per Gaurav, 2026-07-22): Finance — Quickwins has
-  Ananya, Kaustubh, Matt; Ops — Quickwins has Nikki, Ananya, Matt.
+  Ananya Sharma, Kaustubh Toraskar, Matt Webb; Ops — Quickwins has
+  Niki Collette, Ananya Sharma, Matt Webb.
+- Titles and the full leadership chain up to Marc Rowan (CEO) come from the
+  Apollo Hierarchy sheet shared by Pradeep Bhatt (2026-07-22). Confirmed by
+  Gaurav: Srinivas Vemuri reports directly to Vinay Jain (peer of Ashok
+  Kumar — supersedes the earlier table); sheet spellings adopted
+  ("Niki Collette", but "Ananya Sharma" not "Anany"); "Greogory Sills" was
+  a typo for Gregory Sills.
+- In-stream chains are capped at the first senior anchor (MD/Partner/
+  President/CEO) so cards stay compact; the full chain to the CEO lives in
+  the Apollo hierarchy view and the panel's Reporting Line.
 - Apollo hierarchy comes from the client reporting table (2026-07-21).
   **Rajeev Kollara is Apollo Leadership** (not a stream stakeholder): he
   appears in the Quickwins chains above Kaustubh and reports to John Hack.
