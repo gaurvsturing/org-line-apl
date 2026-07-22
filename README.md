@@ -21,10 +21,13 @@ step, no server.
 - Clicking anyone in the hierarchy opens their profile panel. Sections, in
   order: **Streams**, **Reporting Line** (clickable chain up to the top),
   **Turing Team** per stakeholder stream (tech lead + members, each
-  clickable), then **Direct Reports**. Every direct report whose org has
-  Turing teams under it gets a **chevron dropdown** that expands the teams
-  inline — so from a leader like Virender Bedi you can open each report and
-  see exactly which Turing people work under their part of the org.
+  clickable), then **Direct Reports**. Each direct report's **chevron
+  dropdown is a recursive drill-down of the Apollo org**: it shows the
+  Turing teams for the streams that person holds directly, plus their own
+  Apollo reportees — each expandable again, all the way down. Teams appear
+  under the Apollo person who actually owns the stream, so from Scott
+  Kleinman you can walk Bryon Vielehr → Jamey Lamanna → Virender Bedi →
+  Niki Collette and find her Turing team exactly where she sits.
 - **Click a stream card** to collapse/expand it in place. Inside, the hierarchy
   reads top-down like a reporting line: the **Apollo · Client Stakeholders**
   zone (light blue) sits on top, a connector line drops into the
