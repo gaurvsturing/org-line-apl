@@ -15,9 +15,14 @@ step, no server.
   connected tree (e.g., CRE shows John Cortese → Jason D'Silva → Atul Singh →
   Nicholas Pollari). **Apollo Leadership** (managers above the stakeholders)
   render as dashed cards with indigo avatars — distinct from the solid
-  dark-avatar stakeholder cards — and have their own legend entry in the header. The **"Apollo hierarchy"** header
-  button switches to a standalone tree of the full client organization;
-  clicking again returns to the streams.
+  dark-avatar stakeholder cards — and have their own legend entry in the
+  header. The **"Apollo hierarchy"** header button switches to a standalone
+  tree of the full client organization; clicking again ("Work streams")
+  returns to the streams. Every node in the hierarchy view carries
+  **workstream tags**: a stakeholder shows their own stream(s), a leader
+  shows every stream covered by their org (first 3 + "+n"; hover for the
+  full list; Marc Rowan shows "All 9 streams"). Short tag labels come from
+  each stream's `short` field in `STREAMS`.
 - Clicking anyone in the hierarchy opens their profile panel. Sections, in
   order: **Streams**, **Reporting Line** (clickable chain up to the top),
   **Turing Team** per stakeholder stream (tech lead + members, each

@@ -250,6 +250,16 @@
   .hnode .p-text{width:100%}
   .hnode .p-name{font-size:11.5px;white-space:normal;line-height:1.25}
   .hnode .p-title{font-size:10px}
+  /* workstream tags on hierarchy nodes */
+  .h-streams{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:2px;max-width:100%}
+  .h-tag{
+    display:inline-flex;align-items:center;gap:3px;
+    font-size:8.5px;font-weight:600;line-height:1.6;
+    padding:0 6px;border-radius:9px;
+    background:var(--blue-95);color:var(--blue-20);white-space:nowrap;
+  }
+  .h-tag .hd{width:5px;height:5px;border-radius:50%;background:var(--tag-color,var(--color-blue));flex-shrink:0}
+  .h-tag.more{background:var(--gray-90);color:var(--gray-40)}
   /* Apollo leadership: managers above the stakeholders (indigo, dashed) */
   .hnode.ctx{border-style:dashed;box-shadow:none}
   .hnode.ctx .avatar{background:var(--color-indigo);color:#fff}
@@ -547,7 +557,7 @@ const PEOPLE = {
 const STREAMS = [
   {
     name: "Finance — Quickwins",
-    accent: "#2e6edf",
+    accent: "#2e6edf", short: "Fin Quickwins",
     members: [
       { name: "Pradeep", role: "PM" },
       { name: "Vaibhav" }, { name: "Govind" }, { name: "Dhananjay" },
@@ -561,7 +571,7 @@ const STREAMS = [
   },
   {
     name: "Ops — Quickwins",
-    accent: "#56a8f7",
+    accent: "#56a8f7", short: "Ops Quickwins",
     members: [
       { name: "Pradeep", role: "PM" },
       { name: "Vivek" }, { name: "Kranthi" }, { name: "Devesh" }
@@ -574,7 +584,7 @@ const STREAMS = [
   },
   {
     name: "Finance — Econtroller",
-    accent: "#6c7bd4",
+    accent: "#6c7bd4", short: "Econtroller",
     members: [
       { name: "Jesse" }, { name: "Samarth" }, { name: "Pankaj" },
       { name: "Jatin" }, { name: "Yinchang" }, { name: "Jurrien" }
@@ -584,42 +594,42 @@ const STREAMS = [
   },
   {
     name: "Ops — Servstream",
-    accent: "#41bfad",
+    accent: "#41bfad", short: "Servstream",
     members: [ { name: "Vivek" }, { name: "Sumeet" }, { name: "Tanveer" } ],
     techLeads: [],
     stakeholders: [ { name: "Niki Collette" } ]
   },
   {
     name: "CoreAI",
-    accent: "#8a62d6",
+    accent: "#8a62d6", short: "CoreAI",
     members: [ { name: "Pradeep" }, { name: "Vikrant" }, { name: "Saikumar" } ],
     techLeads: ["Rahul Ramchandran"],
     stakeholders: [ { name: "Abdul Goffar" }, { name: "Swapnil Daptardar" } ]
   },
   {
     name: "Capital Formation",
-    accent: "#ed8138",
+    accent: "#ed8138", short: "Cap Formation",
     members: [ { name: "Ruturaj" }, { name: "Sankalp" }, { name: "Shubham" }, { name: "Shobhit" } ],
     techLeads: ["Rahul Ramchandran"],
     stakeholders: [ { name: "Orhan Yarar" } ]
   },
   {
     name: "ACS",
-    accent: "#3bd3e6",
+    accent: "#3bd3e6", short: "ACS",
     members: [ { name: "Anurag" } ],
     techLeads: [],
     stakeholders: [ { name: "Stephen Olano" } ]
   },
   {
     name: "Data Engineering",
-    accent: "#66cc80",
+    accent: "#66cc80", short: "Data Eng",
     members: [ { name: "Deepak Singh" } ],
     techLeads: [],
     stakeholders: [ { name: "Ashok Kumar" }, { name: "Srinivas Vemuri" } ]
   },
   {
     name: "CRE",
-    accent: "#2137b4",
+    accent: "#2137b4", short: "CRE",
     members: [ { name: "Harshitha" } ],
     techLeads: [],
     stakeholders: [ { name: "Nicholas Pollari" } ]
@@ -874,7 +884,21 @@ Object.keys(APOLLO_REPORTING).forEach(n => {
   if (m) (REPORTS_OF[m] = REPORTS_OF[m] || []).push(n);
 });
 
-function hnodeCard(name, ctx){
+/* all workstreams this person touches: their own stakeholder streams
+   plus every stream held by anyone below them in the Apollo org */
+function nodeStreams(name){
+  const set = new Set();
+  const visit = n => {
+    (roleIndex[n] || []).forEach(e => {
+      if (e.role === "Apollo Stakeholder") set.add(e.stream);
+    });
+    (REPORTS_OF[n] || []).forEach(visit);
+  };
+  visit(name);
+  return [...set];
+}
+
+function hnodeCard(name, ctx, showStreams){
   const p = PEOPLE[name] || {};
   const d = document.createElement("div");
   d.className = "person hnode" + (ctx ? " ctx" : "");
@@ -888,6 +912,39 @@ function hnodeCard(name, ctx){
   tt.className = "p-title"; tt.textContent = p.title || "Apollo";
   txt.appendChild(nm); txt.appendChild(tt);
   d.appendChild(txt);
+
+  if (showStreams) {
+    const sts = nodeStreams(name);
+    if (sts.length) {
+      const wrap = document.createElement("div");
+      wrap.className = "h-streams";
+      wrap.title = sts.join(" · ");
+      if (sts.length === STREAMS.length) {
+        const t = document.createElement("span");
+        t.className = "h-tag more";
+        t.textContent = "All " + STREAMS.length + " streams";
+        wrap.appendChild(t);
+      } else {
+        const MAX_TAGS = 3;
+        sts.slice(0, MAX_TAGS).forEach(sn => {
+          const s = STREAMS.find(x => x.name === sn);
+          const t = document.createElement("span");
+          t.className = "h-tag";
+          t.style.setProperty("--tag-color", s ? s.accent : "var(--color-blue)");
+          t.innerHTML = '<span class="hd"></span>' + ((s && s.short) || sn);
+          wrap.appendChild(t);
+        });
+        if (sts.length > MAX_TAGS) {
+          const t = document.createElement("span");
+          t.className = "h-tag more";
+          t.textContent = "+" + (sts.length - MAX_TAGS);
+          wrap.appendChild(t);
+        }
+      }
+      d.appendChild(wrap);
+    }
+  }
+
   d.addEventListener("click", e => { e.stopPropagation(); openPanel(name); });
   return d;
 }
@@ -896,7 +953,7 @@ function hierNode(name){
   const li = document.createElement("li");
   /* indigo leadership styling for anyone who isn't a stream stakeholder */
   const isLeader = !(roleIndex[name] || []).some(e => e.role === "Apollo Stakeholder");
-  li.appendChild(hnodeCard(name, isLeader));
+  li.appendChild(hnodeCard(name, isLeader, true));
   const kids = REPORTS_OF[name] || [];
   if (kids.length){
     const ul = document.createElement("ul");
